@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-T">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Pesa Payment</title>
+    <link rel="stylesheet" href="payment.css">
+</head>
+<body>
+    <div class="container">
+        <h1>M-Pesa Payment</h1>
+        <p>Enter your details below to complete the payment.</p>
+        <form id="paymentForm">
+            <input type="tel" id="phone" placeholder="Phone (e.g., 0712345678)" required>
+            <input type="number" id="amount" placeholder="Amount (e.g., 10)" required>
+            <button type="submit" id="payButton">Pay Now</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+    <script src="payment.js"></script>
+</body>
+</html>
