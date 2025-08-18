@@ -37,7 +37,7 @@ const getAccessToken = async () => {
 app.post('/stkpush', async (req, res) => {
     try {
         const accessToken = await getAccessToken();
-        const url = 'https://safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+        const url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
         const { amount, phone } = req.body;
 
