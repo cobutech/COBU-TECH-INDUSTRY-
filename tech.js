@@ -1,12 +1,21 @@
 // server.js
 const express = require('express');
 const axios = require('axios');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname)); // Serve static files from the root directory
+
+// Serve static files from the root directory
+// This is what makes files like index.html, styles.css, and app.js available
+app.use(express.static(__dirname));
+
+// A simple route to confirm the server is running
+app.get('/status', (req, res) => {
+    res.status(200).send('Server is up and running.');
+});
 
 // Function to get Daraja API access token
 const getAccessToken = async () => {
@@ -28,11 +37,11 @@ const getAccessToken = async () => {
 app.post('/stkpush', async (req, res) => {
     try {
         const accessToken = await getAccessToken();
-        const url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+        const url = 'https://safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
         const { amount, phone } = req.body;
 
-        // Format phone number to 254...
+        // Ensure the phone number is in the correct format (254...)
         const formattedPhone = phone.startsWith('0') ? '254' + phone.substring(1) : phone;
 
         const timestamp = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 14);
@@ -44,12 +53,12 @@ app.post('/stkpush', async (req, res) => {
             BusinessShortCode: shortcode,
             Password: password,
             Timestamp: timestamp,
-            TransactionType: 'CustomerPayBillOnline', // or 'CustomerBuyGoodsOnline'
+            TransactionType: 'CustomerPayBillOnline',
             Amount: amount,
             PartyA: formattedPhone,
             PartyB: shortcode,
             PhoneNumber: formattedPhone,
-            CallBackURL: `${process.env.MPESA_CALLBACK_URL}/callback`,
+            CallBackURL: `${process.env.MPESA_CALLBACK_URL}`,
             AccountReference: 'YourWebsiteName',
             TransactionDesc: 'Payment for services'
         };
@@ -77,13 +86,12 @@ app.post('/callback', (req, res) => {
     res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
 });
 
-// Serve the index.html file
+// Serve the index.html file as the main entry point
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + 'payment.html');
+    res.sendFile(path.join(__dirname, 'payment.html'));
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
