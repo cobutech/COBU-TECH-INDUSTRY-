@@ -93,52 +93,7 @@ app.post('/callback', (req, res) => {
     res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
 });
 
-// Serve the index.html file as the main entry point
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'payment.html'));
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-        const payload = {
-            BusinessShortCode: shortcode,
-            Password: password,
-            Timestamp: timestamp,
-            TransactionType: 'CustomerPayBillOnline',
-            Amount: amount,
-            PartyA: formattedPhone,
-            PartyB: shortcode,
-            PhoneNumber: formattedPhone,
-            CallBackURL: `${process.env.MPESA_CALLBACK_URL}`,
-            AccountReference: 'YourWebsiteName',
-            TransactionDesc: 'Payment for services'
-        };
-
-        const response = await axios.post(url, payload, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        res.status(200).json(response.data);
-
-    } catch (error) {
-        console.error('STK Push Error:', error.response ? error.response.data : error.message);
-        res.status(500).json({ message: 'An error occurred during the STK push process.' });
-    }
-});
-app.post('/callback', (req, res) => {
-    console.log('--- M-PESA Callback Received ---');
-    console.log(JSON.stringify(req.body, null, 2));
-    console.log('-------------------------------');
-    res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
-});
-
-// Serve the index.html file as the main entry point
+// Serve the HTML file as the main entry point
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'payment.html'));
 });
